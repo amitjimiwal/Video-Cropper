@@ -1,10 +1,17 @@
-import React, { useState } from "react";
-import { FaPlay } from "react-icons/fa";
+import React from "react";
+import { FaPlay, FaPause } from "react-icons/fa";
+import useAppStore from "../store/videostore";
 
 const VideoControls: React.FC = () => {
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration] = useState(40.98);
-
+  const {
+    isPlaying,
+    setIsPlaying,
+    totalDuration,
+    currentTimeStamp,
+    setCurrentTimeStamp,
+    volume,
+    setVolume,
+  } = useAppStore();
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
@@ -12,27 +19,30 @@ const VideoControls: React.FC = () => {
       .toString()
       .padStart(2, "0")}`;
   };
-
   return (
     <div className="w-full mx-auto text-white">
       <div className="flex items-center mb-2">
-        <button className="mr-4 ">
-          <FaPlay className="text-white" />
+        <button className="mr-4 " onClick={() => setIsPlaying(!isPlaying)}>
+          {isPlaying ? (
+            <FaPause className="text-white" />
+          ) : (
+            <FaPlay className="text-white" />
+          )}
         </button>
         <div className="flex-grow">
           <input
             type="range"
             min="0"
-            max={duration}
-            value={currentTime}
-            onChange={(e) => setCurrentTime(parseFloat(e.target.value))}
+            max={totalDuration}
+            value={currentTimeStamp}
+            onChange={(e) => setCurrentTimeStamp(parseFloat(e.target.value))}
             className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
           />
         </div>
       </div>
       <div className="flex items-center justify-between">
         <div className="text-sm">
-          {formatTime(currentTime)} / {formatTime(duration)}
+          {formatTime(currentTimeStamp)} / {formatTime(totalDuration)}
         </div>
         <div className="flex items-center">
           <button className="mr-4 focus:outline-none">
@@ -48,15 +58,17 @@ const VideoControls: React.FC = () => {
             type="range"
             min="0"
             max="100"
-            value={50}
+            id="volume"
+            value={volume}
             className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+            onChange={(e) => setVolume(parseFloat(e.target.value))}
           />
         </div>
       </div>
       <div className="flex items-center gap-5 px-3 py-2">
         <select className="px-2 py-1 mr-2 text-sm text-white bg-gray-700 rounded focus:outline-none">
-          <option>0.25x</option>
-          <option>0.5x</option>
+          <option value="0.25">0.25x</option>
+          <option value="">0.5x</option>
           <option>0.75x</option>
           <option>1x</option>
           <option>1.25x</option>
