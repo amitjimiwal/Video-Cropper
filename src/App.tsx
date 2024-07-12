@@ -26,7 +26,7 @@ function App() {
     setAspectWidthRatio,
   } = useAppStore();
 
-  
+
   const { addData } = useTimeStampStore();
   const videoRef = useRef<HTMLVideoElement>(null);
   const dragRef = useRef<HTMLDivElement>(null);
@@ -128,7 +128,7 @@ function App() {
   function captureTimeStamp() {
     if (dragRef.current && videoRef.current) {
       addData({
-        timeStamp: Math.floor(Math.floor(currentTimeStamp % 60)),
+        timeStamp: Math.floor(currentTimeStamp),
         coordinates: [
           position.x,
           position.y,
