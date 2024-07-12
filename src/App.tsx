@@ -25,10 +25,13 @@ function App() {
     setVideoHeight,
     setAspectWidthRatio,
   } = useAppStore();
+
+  
   const { addData } = useTimeStampStore();
   const videoRef = useRef<HTMLVideoElement>(null);
   const dragRef = useRef<HTMLDivElement>(null);
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
+
   const updatePreview = useCallback(() => {
     if (
       videoRef.current &&
@@ -59,6 +62,7 @@ function App() {
       }
     }
   }, [isCroppedStarted, aspectWidth, position.x]);
+
   const onMouseDown = useCallback(() => {
     setIsDragging(true);
     captureTimeStamp();
@@ -198,7 +202,7 @@ function CropperControls() {
   const { setIsCroppedStarted, isCroppedStarted } = useAppStore();
   const { downloadData } = useTimeStampStore();
   return (
-    <div className="flex flex-wrap items-center justify-start gap-2 px-4 py-4 rounded-lg border-t-2 border-secondary mt-5">
+    <div className="flex flex-wrap items-center justify-start gap-2 px-4 py-4 rounded-lg border-t-2 border-secondary mt-10">
       <Button
         onClick={() => {
           setIsCroppedStarted(!isCroppedStarted);
