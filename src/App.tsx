@@ -5,16 +5,20 @@ import Header from "./component/Header";
 import NoPreview from "./component/NoPreview";
 import VideoControls from "./component/VideoControls";
 import useAppStore from "./store/videostore";
+import Video from "./component/Video";
 
 function App() {
   const {
     isPlaying,
-    currentTimeStamp,
     volume,
     setTotalDuration,
     setCurrentTimeStamp,
+    currentTimeStamp,
+    playbackRate,
   } = useAppStore();
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  //video start stop
   useEffect(() => {
     if (isPlaying) {
       videoRef.current?.play();
@@ -22,14 +26,22 @@ function App() {
       videoRef.current?.pause();
     }
   }, [isPlaying]);
-  useEffect(() => {
-    if (videoRef.current) videoRef.current.currentTime = currentTimeStamp;
-  }, [currentTimeStamp]);
 
+  //handling the seekbar timestamp changes
+  useEffect(() => {
+    if (videoRef.current && !isPlaying)
+      videoRef.current.currentTime = currentTimeStamp;
+  }, [currentTimeStamp, isPlaying]);
+
+  // Handling volume
   useEffect(() => {
     if (videoRef.current) videoRef.current.volume = volume / 100;
   }, [volume]);
 
+  // Handling playback rate
+  useEffect(() => {
+    if (videoRef.current) videoRef.current.playbackRate = playbackRate;
+  }, [playbackRate]);
   return (
     <div className="w-full min-h-screen bg-background">
       {/* Header UI */}
@@ -37,15 +49,12 @@ function App() {
       {/* Video UI */}
       <section className="h-[600px] flex w-full">
         <section className="w-1/2 px-10 py-7 ">
-          <video
-            src="/t20.mp4"
-            controls={false}
-            className="w-full"
+          <Video
             ref={videoRef}
-            onLoadedMetadata={() => {
+            loadedFunc={() => {
               setTotalDuration(videoRef.current?.duration || 0);
             }}
-            onTimeUpdate={() => {
+            timeUpdateFunc={() => {
               setCurrentTimeStamp(videoRef.current?.currentTime || 0);
             }}
           />

@@ -1,7 +1,7 @@
 import React from "react";
 import { FaPlay, FaPause } from "react-icons/fa";
 import useAppStore from "../store/videostore";
-
+import { IoVolumeMuteSharp, IoVolumeHigh } from "react-icons/io5";
 const VideoControls: React.FC = () => {
   const {
     isPlaying,
@@ -35,7 +35,10 @@ const VideoControls: React.FC = () => {
             min="0"
             max={totalDuration}
             value={currentTimeStamp}
-            onChange={(e) => setCurrentTimeStamp(parseFloat(e.target.value))}
+            onChange={(e) => {
+              setIsPlaying(false); //pause the player when you're seeking the video
+              setCurrentTimeStamp(parseFloat(e.target.value));
+            }}
             className="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
           />
         </div>
@@ -46,13 +49,7 @@ const VideoControls: React.FC = () => {
         </div>
         <div className="flex items-center">
           <button className="mr-4 focus:outline-none">
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
+            {volume === 0 ? <IoVolumeMuteSharp /> : <IoVolumeHigh />}
           </button>
           <input
             type="range"
@@ -65,17 +62,8 @@ const VideoControls: React.FC = () => {
           />
         </div>
       </div>
-      <div className="flex items-center gap-5 px-3 py-2">
-        <select className="px-2 py-1 mr-2 text-sm text-white bg-gray-700 rounded focus:outline-none">
-          <option value="0.25">0.25x</option>
-          <option value="">0.5x</option>
-          <option>0.75x</option>
-          <option>1x</option>
-          <option>1.25x</option>
-          <option>1.5x</option>
-          <option>2x</option>
-          <option>2.5x</option>
-        </select>
+      <div className="flex items-center gap-5 pl-3 mt-3">
+        <PlaybackSpeedControl />
         <select className="px-2 py-1 text-sm text-white bg-gray-700 rounded focus:outline-none">
           <option>Aspect Ratio 3:16</option>
           <option>9:16</option>
@@ -87,3 +75,43 @@ const VideoControls: React.FC = () => {
 };
 
 export default VideoControls;
+const PlaybackSpeedControl = () => {
+  const { playbackRate, setPlaybackRate } = useAppStore();
+  const [open, setOpen] = React.useState(false);
+  const speeds = [
+    { label: "0.5x", value: 0.5 },
+    { label: "0.75x", value: 0.75 },
+    { label: "1x", value: 1 },
+    { label: "1.25x", value: 1.25 },
+    { label: "1.5x", value: 1.5 },
+    { label: "2x", value: 2 },
+  ];
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className="relative px-4 py-2 text-xs font-medium text-white bg-transparent rounded-md hover: focus:outline-none ring-2 ring-tertiary w-[180px]"
+      >
+        Playback speed <span className="text-tertiary">{playbackRate}x</span>
+      </button>
+      {open && (
+        <div className="absolute w-[180px] h-20 overflow-x-hidden overflow-y-scroll bg-transparent top-8 scrollbar-custom scrollbar-blue scrollbar-thin">
+          <div className="">
+            {speeds.map((speed) => (
+              <div
+                key={speed.value}
+                onClick={() => {
+                  setPlaybackRate(speed.value);
+                  setOpen(false);
+                }}
+                className="w-full px-3 py-2 text-xs text-block text-tertiary hover:bg-secondary"
+              >
+                {speed.label}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
