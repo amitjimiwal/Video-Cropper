@@ -21,9 +21,42 @@ function App() {
     position,
     setPosition,
     aspectWidth,
+    setVideoHeight,
+    setAspectWidthRatio,
   } = useAppStore();
   const videoRef = useRef<HTMLVideoElement>(null);
   const dragRef = useRef<HTMLDivElement>(null);
+  const previewCanvasRef = useRef<HTMLCanvasElement>(null);
+  const updatePreview = useCallback(() => {
+    if (
+      videoRef.current &&
+      previewCanvasRef.current &&
+      dragRef.current &&
+      isCroppedStarted
+    ) {
+      const vHeight = videoRef.current.offsetHeight;
+      previewCanvasRef.current.width = dragRef.current.offsetWidth;
+      previewCanvasRef.current.height = vHeight;
+      const ctx = previewCanvasRef.current.getContext("2d");
+      if (ctx) {
+        const sx = position.x;
+        const sy = 0;
+        const sWidth = aspectWidth;
+        const sHeight = dragRef.current.offsetHeight;
+        ctx.drawImage(
+          videoRef.current,
+          sx,
+          sy,
+          sWidth,
+          sHeight,
+          0,
+          0,
+          dragRef.current.offsetWidth + 40,
+          dragRef.current.offsetHeight
+        );
+      }
+    }
+  }, [isCroppedStarted, aspectWidth, position.x]);
   const onMouseDown = useCallback(() => {
     setIsDragging(true);
   }, []);
@@ -41,11 +74,11 @@ function App() {
         newY = Math.max(0, Math.min(newY, videoRect.height - dragRect.height));
 
         setPosition({ x: newX, y: newY });
+        updatePreview();
       }
     },
-    [isDragging]
+    [isDragging,updatePreview]
   );
-
   const onMouseUp = useCallback(() => {
     setIsDragging(false);
   }, []);
@@ -75,6 +108,12 @@ function App() {
     if (videoRef.current) videoRef.current.playbackRate = playbackRate;
   }, [playbackRate]);
 
+  //Initial default aspect width
+  useEffect(() => {
+    if (videoRef.current)
+      setAspectWidthRatio(0.75 * videoRef.current.offsetHeight, "3:4");
+  }, [setAspectWidthRatio]);
+
   return (
     <div className="w-full min-h-screen bg-background">
       <Header />
@@ -89,9 +128,9 @@ function App() {
             {isCroppedStarted && (
               <div
                 ref={dragRef}
-                className="absolute top-0 z-40 grid w-56 h-full grid-cols-3 bg-white cursor-move bg-opacity-20"
+                className="absolute top-0 z-40 grid h-full grid-cols-3 bg-white cursor-move bg-opacity-20"
                 style={{
-                  width: `${aspectWidth}%`,
+                  width: `${aspectWidth}px`,
                   left: `${position.x}px`,
                 }}
                 onMouseDown={onMouseDown}
@@ -108,9 +147,11 @@ function App() {
               ref={videoRef}
               className=""
               loadedFunc={() => {
+                setVideoHeight(videoRef.current?.offsetHeight || 0);
                 setTotalDuration(videoRef.current?.duration || 0);
               }}
               timeUpdateFunc={() => {
+                updatePreview();
                 setCurrentTimeStamp(videoRef.current?.currentTime || 0);
               }}
             />
@@ -120,7 +161,7 @@ function App() {
         <section className="w-1/2 px-10 py-7 ">
           <h5 className="text-center text-tertiary">Preview</h5>
           {isCroppedStarted && isPlaying ? (
-            <div className="w-full ">Started PReview</div>
+            <canvas ref={previewCanvasRef} className="mt-4 mx-auto" />
           ) : (
             <NoPreview />
           )}

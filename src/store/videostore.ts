@@ -26,6 +26,8 @@ type Store = {
      setAspectWidthRatio: (aspectWidth: number, aspectRatio: string) => void,
      isDragging: boolean,
      setIsDragging: (isDragging: boolean) => void,
+     videoHeight: number,
+     setVideoHeight: (videoHeight: number) => void,
 }
 const useAppStore = create<Store>((set) => ({
      session: 'Generate',
@@ -55,6 +57,8 @@ const useAppStore = create<Store>((set) => ({
      setAspectWidthRatio: (aspectWidth: number, aspectRatio: string) => set({ aspectWidth, aspectRatio }),
      isDragging: false,
      setIsDragging: (isDragging: boolean) => set({ isDragging }),
+     videoHeight: 0,
+     setVideoHeight: (videoHeight: number) => set({ videoHeight }),
 }))
 
 export default useAppStore

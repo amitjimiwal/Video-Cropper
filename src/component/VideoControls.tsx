@@ -11,14 +11,13 @@ const speeds = [
   { label: "2x", value: 2 },
 ];
 
-
 const aspectRatios = [
-  { value: 50, label: "9:18" },
-  { value: 56.25, label: "9:16" },
-  { value: 133.33, label: "4:3" },
-  { value: 75, label: "3:4" },
-  { value: 100, label: "1:1" },
-  { value: 80, label: "4:5" },
+  { value: 0.5, label: "9:18" },
+  { value: 0.562, label: "9:16" },
+  { value: 1.33, label: "4:3" },
+  { value: 0.75, label: "3:4" },
+  { value: 1, label: "1:1" },
+  { value: 0.8, label: "4:5" },
 ];
 
 const VideoControls: React.FC = () => {
@@ -64,7 +63,8 @@ const VideoControls: React.FC = () => {
       </div>
       <div className="flex items-center justify-between">
         <div className="text-sm">
-          {formatTime(currentTimeStamp)} / {formatTime(totalDuration)}
+          {formatTime(currentTimeStamp)} /{" "}
+          <span className="text-tertiary">{formatTime(totalDuration)}</span>
         </div>
         <div className="flex items-center">
           <button className="mr-4 focus:outline-none">
@@ -124,7 +124,7 @@ const PlayBackControl = () => {
 };
 
 const AspectRatioControl = () => {
-  const { aspectRatio, setAspectWidthRatio } = useAppStore();
+  const { aspectRatio, setAspectWidthRatio, videoHeight } = useAppStore();
   const [open, setOpen] = React.useState(false);
   return (
     <div className="relative">
@@ -141,7 +141,7 @@ const AspectRatioControl = () => {
               <div
                 key={aspect.value}
                 onClick={() => {
-                  setAspectWidthRatio(aspect.value, aspect.label);
+                  setAspectWidthRatio(aspect.value * videoHeight, aspect.label);
                   setOpen(false);
                 }}
                 className="w-full px-3 py-2 text-xs text-block text-tertiary hover:bg-secondary"
