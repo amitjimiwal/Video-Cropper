@@ -18,6 +18,14 @@ type Store = {
      isCroppedStarted: boolean,
      setIsCroppedStarted: (isCroppedStarted: boolean) => void,
      videoRef: React.RefObject<HTMLVideoElement> | null,
+     position: { x: number, y: number },
+     setPosition: (props: { x: number, y: number }) => void,
+
+     aspectRatio: string,
+     aspectWidth: number,
+     setAspectWidthRatio: (aspectWidth: number, aspectRatio: string) => void,
+     isDragging: boolean,
+     setIsDragging: (isDragging: boolean) => void,
 }
 const useAppStore = create<Store>((set) => ({
      session: 'Generate',
@@ -40,6 +48,13 @@ const useAppStore = create<Store>((set) => ({
      isCroppedStarted: false,
      setIsCroppedStarted: (isCroppedStarted: boolean) => set({ isCroppedStarted }),
      videoRef: null,
+     position: { x: 0, y: 0 },
+     setPosition: ({ x, y }: { x: number, y: number }) => set({ position: { x, y } }),
+     aspectRatio: '3:4',
+     aspectWidth: 75,
+     setAspectWidthRatio: (aspectWidth: number, aspectRatio: string) => set({ aspectWidth, aspectRatio }),
+     isDragging: false,
+     setIsDragging: (isDragging: boolean) => set({ isDragging }),
 }))
 
 export default useAppStore
