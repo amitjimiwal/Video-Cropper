@@ -198,7 +198,7 @@ function CropperControls() {
   const { setIsCroppedStarted, isCroppedStarted } = useAppStore();
   const { downloadData } = useTimeStampStore();
   return (
-    <div className="flex flex-wrap items-center justify-start gap-2 px-4 py-4 rounded-lg border-t-2 border-secondary">
+    <div className="flex flex-wrap items-center justify-start gap-2 px-4 py-4 rounded-lg border-t-2 border-secondary mt-5">
       <Button
         onClick={() => {
           setIsCroppedStarted(!isCroppedStarted);
