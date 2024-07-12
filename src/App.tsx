@@ -6,6 +6,7 @@ import NoPreview from "./component/NoPreview";
 import VideoControls from "./component/VideoControls";
 import useAppStore from "./store/videostore";
 import Video from "./component/Video";
+import useTimeStampStore from "./store/timeStamp";
 
 function App() {
   const {
@@ -24,6 +25,7 @@ function App() {
     setVideoHeight,
     setAspectWidthRatio,
   } = useAppStore();
+  const { addData } = useTimeStampStore();
   const videoRef = useRef<HTMLVideoElement>(null);
   const dragRef = useRef<HTMLDivElement>(null);
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -77,11 +79,12 @@ function App() {
         updatePreview();
       }
     },
-    [isDragging,updatePreview]
+    [isDragging, updatePreview]
   );
   const onMouseUp = useCallback(() => {
     setIsDragging(false);
-  }, []);
+    captureTimeStamp();
+  }, [captureTimeStamp]);
 
   //video start stop
   useEffect(() => {
@@ -100,12 +103,16 @@ function App() {
 
   // Handling volume
   useEffect(() => {
-    if (videoRef.current) videoRef.current.volume = volume / 100;
+    if (videoRef.current) {
+      videoRef.current.volume = volume / 100;
+    }
   }, [volume]);
 
   // Handling playback rate
   useEffect(() => {
-    if (videoRef.current) videoRef.current.playbackRate = playbackRate;
+    if (videoRef.current) {
+      videoRef.current.playbackRate = playbackRate;
+    }
   }, [playbackRate]);
 
   //Initial default aspect width
@@ -114,6 +121,21 @@ function App() {
       setAspectWidthRatio(0.75 * videoRef.current.offsetHeight, "3:4");
   }, [setAspectWidthRatio]);
 
+  function captureTimeStamp() {
+    if (dragRef.current && videoRef.current) {
+      addData({
+        timeStamp: currentTimeStamp,
+        coordinates: [
+          position.x,
+          position.y,
+          aspectWidth,
+          dragRef.current?.offsetHeight,
+        ],
+        volume: volume,
+        playbackRate: playbackRate,
+      });
+    }
+  }
   return (
     <div className="w-full min-h-screen bg-background">
       <Header />
@@ -148,7 +170,7 @@ function App() {
               className=""
               loadedFunc={() => {
                 setVideoHeight(videoRef.current?.offsetHeight || 0);
-                setTotalDuration(videoRef.current?.duration || 0);
+                setTotalDuration(Math.floor(videoRef.current?.duration || 0));
               }}
               timeUpdateFunc={() => {
                 updatePreview();
@@ -173,7 +195,13 @@ function App() {
 }
 
 function CropperControls() {
-  const { setIsCroppedStarted, isCroppedStarted } = useAppStore();
+  const {
+    setIsCroppedStarted,
+    isCroppedStarted,
+    totalDuration,
+    currentTimeStamp,
+  } = useAppStore();
+  const { downloadData } = useTimeStampStore();
   return (
     <div className="flex flex-wrap items-center justify-start gap-2 px-4 py-2 rounded-lg">
       <Button
@@ -195,8 +223,9 @@ function CropperControls() {
         Remove Cropper
       </Button>
       <Button
-        disabled={!isCroppedStarted}
+        disabled={!(totalDuration === currentTimeStamp)}
         className="disabled:opacity-70 disabled:cursor-not-allowed"
+        onClick={downloadData}
       >
         Generate Preview
       </Button>
