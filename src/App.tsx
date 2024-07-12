@@ -61,7 +61,8 @@ function App() {
   }, [isCroppedStarted, aspectWidth, position.x]);
   const onMouseDown = useCallback(() => {
     setIsDragging(true);
-  }, []);
+    captureTimeStamp();
+  }, [captureTimeStamp]);
 
   const onMouseMove = useCallback(
     (e: React.MouseEvent) => {
@@ -83,8 +84,7 @@ function App() {
   );
   const onMouseUp = useCallback(() => {
     setIsDragging(false);
-    captureTimeStamp();
-  }, [captureTimeStamp]);
+  }, []);
 
   //video start stop
   useEffect(() => {
@@ -124,7 +124,7 @@ function App() {
   function captureTimeStamp() {
     if (dragRef.current && videoRef.current) {
       addData({
-        timeStamp: currentTimeStamp,
+        timeStamp: Math.floor(Math.floor(currentTimeStamp % 60)),
         coordinates: [
           position.x,
           position.y,
@@ -195,15 +195,10 @@ function App() {
 }
 
 function CropperControls() {
-  const {
-    setIsCroppedStarted,
-    isCroppedStarted,
-    totalDuration,
-    currentTimeStamp,
-  } = useAppStore();
+  const { setIsCroppedStarted, isCroppedStarted } = useAppStore();
   const { downloadData } = useTimeStampStore();
   return (
-    <div className="flex flex-wrap items-center justify-start gap-2 px-4 py-2 rounded-lg">
+    <div className="flex flex-wrap items-center justify-start gap-2 px-4 py-4 rounded-lg border-t-2 border-secondary">
       <Button
         onClick={() => {
           setIsCroppedStarted(!isCroppedStarted);
@@ -223,7 +218,7 @@ function CropperControls() {
         Remove Cropper
       </Button>
       <Button
-        disabled={!(totalDuration === currentTimeStamp)}
+        disabled={!isCroppedStarted}
         className="disabled:opacity-70 disabled:cursor-not-allowed"
         onClick={downloadData}
       >

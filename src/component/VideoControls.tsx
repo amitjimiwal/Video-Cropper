@@ -2,6 +2,7 @@ import React from "react";
 import { FaPlay, FaPause } from "react-icons/fa";
 import useAppStore from "../store/videostore";
 import { IoVolumeMuteSharp, IoVolumeHigh } from "react-icons/io5";
+import { formatTime } from "../utils/helpers";
 const speeds = [
   { label: "0.5x", value: 0.5 },
   { label: "0.75x", value: 0.75 },
@@ -30,13 +31,6 @@ const VideoControls: React.FC = () => {
     volume,
     setVolume,
   } = useAppStore();
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes.toString().padStart(2, "0")}:${seconds
-      .toString()
-      .padStart(2, "0")}`;
-  };
   return (
     <div className="w-full mx-auto text-white">
       <div className="flex items-center mb-2">
