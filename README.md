@@ -1,30 +1,28 @@
-# React + TypeScript + Vite
+# Video Flip Editor
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Dynamic Flip Screen that allows users to crop video content dynamically. This involves integrating a video player, overlaying a cropper layer with multiple aspect ratios, and providing a dynamic preview of the cropped segment.
 
-Currently, two official plugins are available:
+## Installation
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+Clone the repository and run the following command to install the dependencies:
+```bash
+git clone https://github.com/amitjimiwal/Video-Cropper
+```
+```bash
+npm install
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Usage
+To run the project, use the following command:
+
+```bash
+npm run dev
+```
+
+## DEMO VIDEO
+[![Watch the video](loom)](https://www.loom.com/share/5bd753717d3f41859aa534607d63190c?sid=0c8a58fc-d9c8-4807-9466-8feab208b922)
+
+## License
+
+This project is licensed under the [License Name] License - see the LICENSE.md file for details.
+
