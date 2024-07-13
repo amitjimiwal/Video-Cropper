@@ -20,9 +20,10 @@ npm run dev
 ```
 
 ## DEMO VIDEO
-[![Watch the video](loom)](https://www.loom.com/share/5bd753717d3f41859aa534607d63190c?sid=0c8a58fc-d9c8-4807-9466-8feab208b922)
+[Watch the video](https://www.loom.com/share/5bd753717d3f41859aa534607d63190c?sid=0c8a58fc-d9c8-4807-9466-8feab208b922)
 
-## License
+<h2>🛡️ License:</h2>
+This project is licensed under the The ReadLogs Project is licensed under the [MIT License](https://opensource.org/licenses/MIT). Feel free to use modify and distribute the software as per the terms of the license.
 
-This project is licensed under the [License Name] License - see the LICENSE.md file for details.
-
+<h2>💖Like my work?</h2>
+Give a ⭐️ to this repository. Thank you for taking an interest! If you encounter any issues have suggestions or want to report a bug feel free to create an issue on the repository . Happy Coding!
